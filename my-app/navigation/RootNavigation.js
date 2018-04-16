@@ -12,16 +12,20 @@ const RootStackNavigator = StackNavigator(
   {
     Main: {
       screen: MainTabNavigator,
+      
     },
   },
   {
-    navigationOptions: () => ({
+    navigationOptions: ({navigation}) => ({
+      //params: navigation.state.params,
       headerTitleStyle: {
         fontWeight: 'normal',
       },
     }),
-  }
+  },
+
 );
+
 
 export default class RootNavigation extends Component {
 
@@ -45,7 +49,7 @@ export default class RootNavigation extends Component {
 
     if (params.isLoggedIn) {
 
-      return <RootStackNavigator />;
+      return <RootStackNavigator screenProps={{prevNav:this.props.navigation}}/>;
     }
     else {
       return <Login navigation={this.props.navigation}/>;

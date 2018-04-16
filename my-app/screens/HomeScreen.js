@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
+  AppRegistry,
   Image,
   Platform,
   ScrollView,
@@ -7,16 +8,25 @@ import {
   Text,
   TouchableOpacity,
   View,
+  AsyncStorage
 } from 'react-native';
 import { WebBrowser } from 'expo';
+import Login from './LoginScreen';
+import RootNavigation from '../navigation/RootNavigation';
+import MainTabNavigator from '../navigation/MainTabNavigator';
 
 
-export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
+export default class HomeScreen extends Component {
+
+  constructor(props){
+        super(props);
+        preNav: this.props.screenProps.prevNav;
+  }
 
   render() {
+    const { params } = this.props.navigation.state;
+    //console.log(this.props.screenProps.prevNav.state.params);
+    //console.log(this.token);
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -185,3 +195,5 @@ const styles = StyleSheet.create({
     color: '#2e78b7',
   },
 });
+
+AppRegistry.registerComponent('HomeScreen', () => HomeScreen);

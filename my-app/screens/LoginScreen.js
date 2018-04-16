@@ -12,6 +12,7 @@ import {
   Keyboard,
   Platform, 
   StatusBar,
+  AsyncStorage
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
@@ -87,9 +88,8 @@ export default class Login extends Component {
     .then( (response) => {
       if (response.status === 201) {
         const okapi_token = response.headers.get('X-Okapi-Token');
-        
         const { navigate } = this.props.navigation;
-        navigate('Root', { isLoggedIn: true, token: okapi_token });
+        navigate('Root', { isLoggedIn: true, token: okapi_token, username: this.userName });
       }
       else {
         Alert.alert("Error "+response.status);
@@ -105,7 +105,7 @@ const LoginStyles = StyleSheet.create({
   loginview: {
     flex: 1,
     padding: 30,
-      backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff',
   },
   container: {
     flex: 1,

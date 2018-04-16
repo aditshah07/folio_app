@@ -30,7 +30,7 @@ const LoginStyles = StyleSheet.create({
   loginText: {
     color: '#ffffff',
      fontWeight: 'bold',
-     width:50,
+     width:'auto',
   },
   loginTextView: {
     marginTop: 10,
