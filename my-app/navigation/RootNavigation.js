@@ -8,25 +8,6 @@ import registerForPushNotificationsAsync from '../api/registerForPushNotificatio
 import Login from '../screens/LoginScreen';
 
 
-const RootStackNavigator = StackNavigator(
-  {
-    Main: {
-      screen: MainTabNavigator,
-      
-    },
-  },
-  {
-    navigationOptions: ({navigation}) => ({
-      //params: navigation.state.params,
-      headerTitleStyle: {
-        fontWeight: 'normal',
-      },
-    }),
-  },
-
-);
-
-
 export default class RootNavigation extends Component {
 
   constructor(props) {
@@ -45,15 +26,8 @@ export default class RootNavigation extends Component {
   render() {
 
     const { params } = this.props.navigation.state;
-    console.log(params.token);
 
-    if (params.isLoggedIn) {
-
-      return <RootStackNavigator screenProps={{prevNav:this.props.navigation}}/>;
-    }
-    else {
-      return <Login navigation={this.props.navigation}/>;
-    } 
+    return <Login navigation={this.props.navigation}/>;
 
   }
 
