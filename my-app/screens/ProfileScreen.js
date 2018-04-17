@@ -25,6 +25,7 @@ import { Avatar, FormLabel, FormInput, FormValidationMessage, Badge, Icon } from
 import { ExpoLinksView } from '@expo/samples';
 import LoginButton from './lib/LoginButton';
 import Collapsible from 'react-native-collapsible';
+import axios from 'axios';
 
 const window = Dimensions.get('window');
 
@@ -49,29 +50,36 @@ export default class ProfileScreen extends React.Component {
     }
 
    componentDidMount = () => {
-      var fetchOptions = {
-        method: 'GET',
-        headers: {'X-Okapi-Tenant': 'diku', "X-Okapi-Token": this.props.screenProps.prevNav.state.params.token},
-      }
-      let url = "http://folio-testing-backend01.aws.indexdata.com:9130/users?query=username=" + this.props.screenProps.prevNav.state.params.username;
-      fetch(url, fetchOptions)
+    let url = "http://folio-testing-backend01.aws.indexdata.com:9130/users?query=username=" + this.props.navigation.state.params.username;
+      axios.get(url, {
+        headers: { 
+          'X-Okapi-Tenant': 'diku',
+          'X-Okapi-Token': this.props.navigation.state.params.token
+        },
+      })
       .then((responseJson) => {
-         //console.log(responseJson.headers.get('x-okapi-user-id'));
-         if (responseJson.ok) {
-           this.setState({
-              id: responseJson.headers.get('x-okapi-user-id')
-           })
-         } else {
-            Alert.alert("Something went wrong");
-         }
+        //console.log(responseJson.headers.get('x-okapi-user-id'));
+        var userId = 'x-okapi-user-id';
+        if (responseJson.status === 200) {
+          this.setState({
+            id: responseJson.headers[userId],
+          })
+        } else {
+          Alert.alert("Something went wrong 1");
+        }
       })
       .then(() =>{
         let urlForUserInfo = "http://folio-testing-backend01.aws.indexdata.com:9130/users/" + this.state.id;
-        fetch(urlForUserInfo, fetchOptions)
+        axios.get(urlForUserInfo, {
+          headers: { 
+            'X-Okapi-Tenant': 'diku',
+            'X-Okapi-Token': this.props.navigation.state.params.token
+          },
+        })
         .then((responseJson) => {
            console.log(responseJson);
-           if (responseJson.ok) {
-              var responseBody = JSON.parse(responseJson._bodyText);
+           if (responseJson.status === 200) {
+              var responseBody = responseJson.data;
               var fname = responseBody.personal.firstName;
               //console.log(fname);
               this.setState({
@@ -93,16 +101,20 @@ export default class ProfileScreen extends React.Component {
         })
       })
       .then(() => {
-          let url = "http://folio-testing-backend01.aws.indexdata.com:9130/users?query=username=" + this.props.screenProps.prevNav.state.params.username;
-          fetch(urlForUserInfo, fetchOptions)
-          .then((responseJson) => {
-             //console.log(responseJson);
-             if (responseJson.ok) {
-                console.log("success");
-             } else {
-                Alert.alert("Something went wrong");
-             }
-          })
+        let urlForUserInfo = "http://folio-testing-backend01.aws.indexdata.com:9130/users?query=username=" + this.props.navigation.state.params.username;
+        axios.get(urlForUserInfo, {
+          headers: { 
+            'X-Okapi-Tenant': 'diku',
+            'X-Okapi-Token': this.props.navigation.state.params.token
+          },
+        })
+        .then((responseJson) => {
+          if (responseJson.status === 200) {
+            console.log("success");
+          } else {
+            Alert.alert("Something went wrong 3");
+          }
+        })
       })
       .catch((error) => {
          console.error(error);
@@ -150,31 +162,31 @@ export default class ProfileScreen extends React.Component {
   }*/
    onPressCallback = () => {
 
-    var fetchOptions = {
-      method: 'PUT',
-      headers: {'X-Okapi-Tenant': 'diku', 'Content-Type': 'application/json', "X-Okapi-Token": this.props.screenProps.prevNav.state.params.token},
-      body: JSON.stringify({
-        "username": this.state.username,
-        "id": this.state.id,
-        "active": this.state.active,
-        "metadata":this.state.metadata,
-        "proxy": this.state.proxy,
-        "personal": {
-          "firstName": this.state.firstName,
-          "lastName": this.state.lastName,
-          "email": this.state.email,
-          "address":this.state.address
-        }
-
-      })
-    }
-
-
     let url = "http://folio-testing-backend01.aws.indexdata.com:9130/users/" + this.state.id;
-    fetch(url, fetchOptions)
+    let body = JSON.stringify({
+      "username": this.state.username,
+      "id": this.state.id,
+      "active": this.state.active,
+      "metadata":this.state.metadata,
+      "proxy": this.state.proxy,
+      "personal": {
+        "firstName": this.state.firstName,
+        "lastName": this.state.lastName,
+        "email": this.state.email,
+        "address":this.state.address
+      }
+
+    });
+    axios.put(url, body, {
+      headers: {
+        'X-Okapi-Tenant': 'diku',
+        'Content-Type': 'application/json', 
+        "X-Okapi-Token": this.props.navigation.state.params.token
+      }
+    })
     .then( (response) => {
       console.log(response);
-      if (response.ok) {
+      if (responseJson.status === 200) {
         console.log("Successfully Updated profile");
       }
       else {
@@ -281,7 +293,7 @@ export default class ProfileScreen extends React.Component {
                   />
                 </View>
 
-                <View style={{marginTop:13, textAlign: 'center'}}>
+                <View style={{marginTop:13, }}>
                   <Text style = {{fontSize:18, textAlign: 'center'}}> User Info: </Text>
                 </View>
                 <View style = {{flexDirection: 'row', justifyContent: 'flex-end', flex:1, marginRight:18, alignItems: 'center'}}>
@@ -360,7 +372,7 @@ export default class ProfileScreen extends React.Component {
                     onPress={() => {this.setIsCollapsedContact()}}
                   />
                 </View>
-                <View style={{marginTop:13, textAlign: 'center'}}>
+                <View style={{marginTop:13 }}>
                   <Text style = {{fontSize:18, textAlign: 'center'}}> Contact Info: </Text>
                 </View>
 
@@ -403,7 +415,7 @@ export default class ProfileScreen extends React.Component {
                     onPress={() => {this.setIsCollapsedExtended()}}
                   />
                 </View>
-                <View style={{marginTop:13, textAlign: 'center'}}>
+                <View style={{marginTop:13, }}>
                   <Text style = {{fontSize:18, textAlign: 'center'}}> Extended Info: </Text>
                 </View>
                 <View style = {{flexDirection: 'row', justifyContent: 'flex-end', flex:1, marginRight:18, alignItems: 'center'}}>
@@ -446,7 +458,7 @@ export default class ProfileScreen extends React.Component {
                     onPress={() => {this.setIsCollapsedLoan()}}
                   />
                 </View>
-                <View style={{marginTop:13, textAlign: 'center'}}>
+                <View style={{marginTop:13}}>
                   <Text style = {{fontSize:18, textAlign: 'center'}}> Open Loans </Text>
                 </View>
               </View>
