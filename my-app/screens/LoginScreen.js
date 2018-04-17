@@ -12,8 +12,8 @@ import {
   Keyboard,
   Platform, 
   StatusBar,
-  AsyncStorage
 } from 'react-native';
+import axios from 'axios';
 import { StackNavigator } from 'react-navigation';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -71,30 +71,29 @@ export default class Login extends Component {
 
 
   onPressCallback = () => {
+    
 
-    var fetchOptions = {
-      method: 'POST',
-      headers: {'X-Okapi-Tenant': 'diku', 'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        "username": this.userName,
-        //"userId": "diku", useless
-        "password": this.password
-      })
-    }
-
-
-    let url = "http://folio-testing-backend01.aws.indexdata.com:9130/authn/login";
-    fetch(url, fetchOptions)
-    .then( (response) => {
-      if (response.status === 201) {
-        const okapi_token = response.headers.get('X-Okapi-Token');
-        const { navigate } = this.props.navigation;
-        navigate('Root', { isLoggedIn: true, token: okapi_token, username: this.userName });
+    let data = JSON.stringify({
+        'username': this.userName,
+        'password': this.password
+    })
+    let url = 'http://folio-testing-backend01.aws.indexdata.com:9130/authn/login';
+    
+    axios.post(url, data, {
+      headers: {
+        'Content-Type' : 'application/json',
+        'X-Okapi-Tenant' : 'diku',
       }
-      else {
-        Alert.alert("Error "+response.status);
+    })
+    .then((response) => {
+      var tokenName = 'x-okapi-token';
+      const okapi_token = response.headers[tokenName];
 
-      }
+      const { navigate } = this.props.navigation;
+      navigate('MainTab', { isLoggedIn: true, token: okapi_token, username: this.userName});
+    }) 
+    .catch(error => {
+      Alert.alert( ""+ error);
     })
   };
 
@@ -105,7 +104,7 @@ const LoginStyles = StyleSheet.create({
   loginview: {
     flex: 1,
     padding: 30,
-    backgroundColor: '#ffffff',
+      backgroundColor: '#ffffff',
   },
   container: {
     flex: 1,
