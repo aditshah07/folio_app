@@ -63,7 +63,9 @@ export default class Login extends Component {
            
           <LoginButton name='Log in' onPressCallback={this.onPressCallback}/>
 
-          <Text style={{color:"#4A90E2",textAlign:'right',marginTop:10}} >Forget password？</Text>
+          <TouchableOpacity onPress={this._handleforgetpassword} >
+            <Text style={{color:"#4A90E2",textAlign:'right',marginTop:10}} >Forget password？</Text>
+          </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
     )
@@ -96,6 +98,10 @@ export default class Login extends Component {
       Alert.alert( ""+ error);
     })
   };
+
+  _handleforgetpassword = () => {
+    Alert.alert("Please contact the library staff to help you reset password.");
+  }  
 
 }
 
