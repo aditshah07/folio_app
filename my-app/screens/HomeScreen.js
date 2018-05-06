@@ -28,18 +28,15 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
-    const { params } = this.props.screenProps.prevNav.state.params;
+    /*const { params } = this.props.navigation.state;
 
     if (!this.state.isLoadingComplete) {
       this.findisbncode(params.token);
     }
-    console.log(this.state.isbn);
+    console.log(this.state.isbn);*/
 
     return (
       <View style={styles.container}>
-        <View>
-          <Text style={styles.TitleContainer}>Library</Text>
-        </View>
 
         <View style={styles.SubTitleBackground}>
           <Text style={styles.SubTitleText}>New Books</Text>
@@ -166,3 +163,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
