@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
-  AppRegistry,
   Image,
   Platform,
   ScrollView,
@@ -8,192 +7,162 @@ import {
   Text,
   TouchableOpacity,
   View,
-  AsyncStorage
+  Linking,
+  TouchableHighlight,
 } from 'react-native';
-import { WebBrowser } from 'expo';
-import Login from './LoginScreen';
-import RootNavigation from '../navigation/RootNavigation';
-import MainTabNavigator from '../navigation/MainTabNavigator';
+import axios from 'axios';
 
 
-export default class HomeScreen extends Component {
+export default class HomeScreen extends React.Component {
 
-  constructor(props){
-        super(props);
-        preNav: this.props.screenProps.prevNav;
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoadingComplete: false,
+      isbn: ""
+    };
   }
 
+  static navigationOptions = {
+    title: 'HomePage',
+  };
+
   render() {
-    const { params } = this.props.navigation.state;
-    //console.log(this.props.screenProps.prevNav.state.params);
-    //console.log(this.token);
+    const { params } = this.props.screenProps.prevNav.state.params;
+
+    if (!this.state.isLoadingComplete) {
+      this.findisbncode(params.token);
+    }
+    console.log(this.state.isbn);
+
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={
-                __DEV__
-                  ? require('../assets/images/robot-dev.png')
-                  : require('../assets/images/robot-prod.png')
-              }
-              style={styles.welcomeImage}
-            />
-          </View>
+        <View>
+          <Text style={styles.TitleContainer}>Library</Text>
+        </View>
 
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
+        <View style={styles.SubTitleBackground}>
+          <Text style={styles.SubTitleText}>New Books</Text>
+        </View>
 
-            <Text style={styles.getStartedText}>This is Folio App</Text>
+        <ScrollView style={styles.container} horizontal={true}>
+          <TouchableHighlight onPress={() => Linking.openURL('http://openlibrary.org/isbn/0716524783')}>
+            <Image 
+              style={{width: 150, height: 200}}
+              source={{uri: 'http://covers.openlibrary.org/b/isbn/0716524783.jpg'}} 
+            /> 
+          </TouchableHighlight>
 
-            <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <Text style={styles.codeHighlightText}>screens/HomeScreen.js</Text>
-            </View>
+          <TouchableHighlight onPress={() => Linking.openURL('http://openlibrary.org/isbn/9781561454907')}>
+            <Image 
+              style={{width: 150, height: 200}}
+              source={{uri: 'http://covers.openlibrary.org/b/isbn/9781561454907.jpg'}} 
+            /> 
+          </TouchableHighlight>
 
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-            </Text>
-          </View>
+         <TouchableHighlight onPress={() => Linking.openURL('http://openlibrary.org/isbn/9780756540920')}>
+            <Image 
+              style={{width: 150, height: 200}}
+              source={{uri: 'http://covers.openlibrary.org/b/isbn/9780756540920.jpg'}} 
+           /> 
+          </TouchableHighlight>
 
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableHighlight onPress={() => Linking.openURL('http://openlibrary.org/isbn/9780761441809')}>
+            <Image 
+              style={{width: 150, height: 200}}
+              source={{uri: 'http://covers.openlibrary.org/b/isbn/9780761441809.jpg'}} 
+           /> 
+          </TouchableHighlight>
+
+          <TouchableHighlight onPress={() => Linking.openURL('http://openlibrary.org/isbn/9780811850513')}>
+            <Image 
+              style={{width: 150, height: 200}}
+              source={{uri: 'http://covers.openlibrary.org/b/isbn/9780811850513.jpg'}} 
+           /> 
+          </TouchableHighlight>
         </ScrollView>
 
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <Text style={styles.codeHighlightText}>navigation/MainTabNavigator.js</Text>
-          </View>
+        <View style={styles.SubTitleBackground}>
+          <Text style={styles.SubTitleText}>News</Text>
         </View>
+
+        <ScrollView contentInset={{bottom:50}} style={styles.newsbody}>
+          <View>
+            <Text style={styles.header}>Title of blog 1</Text>
+            <Text style={styles.body}>Here is a piece of news. This is blog 1 for displaying font size and line height.</Text>
+          </View>
+
+          <View>
+            <Text style={styles.header}>Title of blog 2</Text>
+            <Text style={styles.body}>Here is another piece of news. This is blog 2 for displaying font size and line height.</Text>
+          </View>
+
+          <View>
+            <Text style={styles.header}>Title of blog 3</Text>
+            <Text style={styles.body}>Here is a third piece of news. This is blog 3 for displaying font size and line height.</Text>
+          </View>
+        </ScrollView>
       </View>
     );
   }
 
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
+  findisbncode(token){
+    let url = "http://folio-testing-backend01.aws.indexdata.com:9130/instance-storage/instances/70f70bfd-0248-453d-add5-56ffb450d1d6";
 
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use useful development
-          tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
+    axios.get(url, {
+      headers: {
+        'X-Okapi-Tenant': 'diku',
+        'X-Okapi-Token': token
+      }
+    })
+    .then( (response) => {
+      const book = response.data;
+      this.setState(
+        (prev) => ({
+          isLoadingComplete: true,
+          isbn: book.identifiers[0].value,
+        }));
+    })
   }
-
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/guides/development-mode');
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    marginBottom: 30,
     backgroundColor: '#fff',
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
+  TitleContainer: {
     textAlign: 'center',
+    marginTop: 50,
+    fontSize: 30,
+    fontWeight: 'bold',
+    lineHeight: 100,
+    backgroundColor: 'rgb(200,200,200)',
   },
-  contentContainer: {
-    paddingTop: 100,
+  SubTitleBackground: {
+    backgroundColor: 'rgb(240,240,240)',
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
+  SubTitleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    lineHeight: 50,
+    marginLeft: 20,
   },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
+  header: {
+    marginTop: 20,
+    marginLeft: 20,
+    fontSize: 18,
+    lineHeight: 30,
+    backgroundColor: '#fff',
   },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
+  body: {
+    marginLeft: 20,
+    fontSize: 15,
+    lineHeight: 25,
+    backgroundColor: '#fff',
   },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
+  newsbody: {
+    marginBottom: 50,
+    backgroundColor: '#fff',
   },
 });
-
-AppRegistry.registerComponent('HomeScreen', () => HomeScreen);
