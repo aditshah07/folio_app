@@ -66,6 +66,7 @@ export default class ProfileScreen extends React.Component {
             titles:[],
             type:'',
             body:{},
+            imageUrls:[],
         }
     }
 
@@ -226,7 +227,7 @@ export default class ProfileScreen extends React.Component {
                                     "id": "cf23adf0-61ba-4887-bf82-956c4aae2260",
                                     "userId": "df7f4993-8c14-4a0f-ab63-93975ab01c76",
                                     "proxyUserId": "346ad017-dac1-417d-9ed8-0ac7eeb886aa",
-                                    "itemId": "0b96a642-5e7f-452d-9cae-9cee66c9a892",
+                                    "itemId": "23f2c8e1-bd5d-4f27-9398-a688c998808a",
                                     "loanDate": "2017-03-01T22:34:11-04:00",
                                     "dueDate": "2017-04-15T22:34:11-04:00",
                                     "status": {
@@ -247,6 +248,19 @@ export default class ProfileScreen extends React.Component {
                                     },
                                     "action": "checkedin",
                                     "itemStatus": "Available"
+                                },{
+                                    "id": "cf23adf0-61ba-4887-bf82-956c4aae2260",
+                                    "userId": "df7f4993-8c14-4a0f-ab63-93975ab01c76",
+                                    "proxyUserId": "346ad017-dac1-417d-9ed8-0ac7eeb886aa",
+                                    "itemId": "23f2c8e1-bd5d-4f27-9398-a688c998808a",
+                                    "loanDate": "2017-03-01T22:34:11-04:00",
+                                    "dueDate": "2017-04-15T22:34:11-04:00",
+                                    "status": {
+                                        "name": "Open"
+                                    },
+                                    "action": "renewed",
+                                    "itemStatus": "Checked out",
+                                    "renewalCount": 1
                                 }, {
                                     "id": "1d09af65-aeaa-499c-80cb-d52847b75a60",
                                     "userId": "15054e48-03e8-4ed5-810b-7192b86accab",
@@ -324,7 +338,9 @@ export default class ProfileScreen extends React.Component {
 
                           })
                         }
+                        return this.state;
                     })
+                    
                     .then((state) => {
                       var state1 = state;
                       let url = "http://folio-testing-backend01.aws.indexdata.com:9130/addresstypes?query=addressType=Home";
@@ -341,8 +357,69 @@ export default class ProfileScreen extends React.Component {
                                     Alert.alert("Something went wrong");
                                 }
                             })
+                            return this.state;
                     })
+                    .then((state) => {
 
+                        //console.log(state.loans[0]);
+                        let url_folio = "https://www.googleapis.com/books/v1/volumes?q=title=";
+                        var urls = [];
+                        for (var i = 0; i < state.loans.length; i++) {
+                            urls[i] = "" + url_folio + state.loans[i].title;
+                        }
+                        console.log(urls.length);
+                        if(urls.length) {
+                          return Promise.all(
+                            urls.map(url => axios.get(url)
+                              .then((response) => {
+                                  //console.log(url);
+                                      
+                                      var responseBody = response.data;
+                                      //console.log(responseBody.items[0].volumeInfo.imageLinks.smallThumbnail);
+                                      var pos = 0;
+
+                                      for(var i = url.length-1; i > 0; i--) {
+                                        if(url.charAt(i) === '='){
+                                          pos = i;
+                                          break;
+                                        }
+                                      }
+                                      var title = url.substring(pos+1);
+                                      //console.log(title);
+                                      this.state.imageUrls.push({imageURL:responseBody.items[0].volumeInfo.imageLinks.smallThumbnail, title: title});
+                                      this.forceUpdate();
+                                  
+                              })
+                              .catch((error) => {
+                                console.error(error);
+                              })
+                            )
+                          )
+                          .then(() => {
+                            var imageUrls = this.state.imageUrls;
+                            var loan = state.loans;
+                            for(var i = 0; i < loan.length; i++) {
+                              for(var j = 0; j < imageUrls.length; j++) {
+                                if((loan[i].title).includes(imageUrls[j].title)) {
+                                  console.log("inside");
+                                  loan[i].imageURL = imageUrls[j].imageURL;
+                                }
+                              }
+                            }
+                            /*for(var i = 0; i < imageUrls.length; i++) {
+                                  loan[i].imageURL = imageUrls[i].imageURL;
+                              
+                            }*/
+                            console.log(loan[0]);
+                            this.state.loans = loan;
+                            this.forceUpdate();
+
+                          })
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    })
                 })
                 
                 .catch((error) => {
@@ -870,21 +947,34 @@ export default class ProfileScreen extends React.Component {
                   <FlatList
                     data= {this.state.loans}
                     keyExtractor={this._keyExtractor}
-                    renderItem={({item}) => <View style = {{marginTop: 20,borderWidth: 0.5,borderColor: 'black'}}>
-                    
-                    <View>
-                      {item.status.name == 'Open'? <Text style = {{marginLeft:5,color:"green", fontSize:18 }}> {item.status.name}</Text>: <Text style = {{marginLeft:5,color:"red", fontSize:18}}> {item.status.name}</Text>} 
-                    </View>
-                    <View>
-                      <Text style = {{marginLeft:10}}>Title: {item.title}</Text>
-                    </View>
-                    <View style = {{flexDirection: 'column', flexWrap:'wrap'}}>
-                      <Text style = {{marginLeft:10}}>Item Status: {item.itemStatus}</Text>
+                    renderItem={({item}) => <View style = {{flex: 1, flexDirection: 'row', marginLeft:10, marginRight:10, borderRadius:5, marginTop: 20,borderWidth: 0.5,borderColor: 'black', background: 'rgba(0,0,0,6)'}}>
                       <View>
-                        {item.status.name == 'Open'? <Text style = {{marginLeft:10}}>Due Date: {item.dueDate.substring(0, 10)}</Text>: null}
-                        {item.status.name == 'Closed'? <Text style = {{marginLeft:10}}>Return Date: {item.returnDate.substring(0, 10)}</Text>: null} 
+                        <Image 
+                          style={{width: 100, height: 150, marginTop:10, marginLeft:10, marginBottom:10}}
+                          source={{uri: item.imageURL}} 
+                        /> 
                       </View>
-                    </View>
+
+                      <View style = {{marginTop:10}}>
+
+                        <View style = {{marginLeft:10}}>
+                            {item.status.name == 'Open'? <Text style = {{marginLeft:5,color:"green", fontSize:18 }}> {item.status.name}</Text>: <Text style = {{marginLeft:5,color:"red", fontSize:18}}> {item.status.name}</Text>} 
+                        </View>
+
+                        <View style = {{flexDirection: 'row'}}>
+                          <FormLabel labStyle = {{margin:0, fontSize:25, fontWeight: '400', marginRight:10}}>{item.title}</FormLabel>
+                        </View>
+
+                        <View style = {{flexDirection: 'column', flexWrap:'wrap'}}>
+                          <Text style = {{marginLeft:20}}>Item Status: {item.itemStatus}</Text>
+                          <Text style = {{marginLeft:20}}>Loan Date: {item.loanDate.substring(0, 10)}</Text>
+                          <View>
+                            {item.status.name == 'Open'? <Text style = {{marginLeft:20}}>Due Date: {item.dueDate.substring(0, 10)}</Text>: null}
+                            {item.status.name == 'Closed'? <Text style = {{marginLeft:20}}>Return Date: {item.returnDate.substring(0, 10)}</Text>: null} 
+                          </View>
+                        </View>
+
+                      </View>
                     </View>}
                   />
                 </View>
