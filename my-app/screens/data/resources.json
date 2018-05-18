@@ -1,0 +1,62 @@
+[
+  {
+    "id": "3-D Objects",
+    "name": "3-D Objects",
+    "checked": false
+  },
+  {
+    "id": "Books",
+    "name": "Books",
+    "checked": true
+  },
+  {
+    "id": "Charts Posters",
+    "name": "Charts Posters",
+    "checked": false
+  },
+  {
+    "id": "Computer Files",
+    "name": "Computer Files",
+    "checked": false
+  },
+  {
+    "id": "Kits",
+    "name": "Kits",
+    "checked": false
+  },
+  {
+    "id": "eBooks",
+    "name": "eBooks",
+    "checked": false
+  },
+  {
+    "id": "Music (Audio)",
+    "name": "Music (Audio)",
+    "checked": false
+  },
+  {
+    "id": "Music (MMS)",
+    "name": "Music (MMS)",
+    "checked": false
+  },
+  {
+    "id": "Serials",
+    "name": "Serials",
+    "checked": false
+  },
+  {
+    "id": "Spoken Record",
+    "name": "Spoken Record",
+    "checked": false
+  },
+  {
+    "id": "Videorecording",
+    "name": "Videorecording",
+    "checked": false
+  },
+  {
+    "id": "Web Resources",
+    "name": "Web Resources",
+    "checked": false
+  }
+]
