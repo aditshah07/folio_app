@@ -14,24 +14,24 @@ The code we writed is listed below:
 * package.json -- Package information
 
 * navigation/ -- Folder contains navigators
- * RootNavigation.js -- Go to login screen, notification api for further development
- * MainTabNavigator.js -- Three tabs, switches Homepage, Profilepage and Settingspage
+ ** RootNavigation.js -- Go to login screen, notification api for further development
+ ** MainTabNavigator.js -- Three tabs, switches Homepage, Profilepage and Settingspage
 
 * screens/ -- Screens Folder
- * data/ 
-  * url.json -- Folio url
-  * loan.json -- Some sample loan info for display on ProfileScreen
-  * resources.json -- Contains subject items with initilal value.
-  * languages.json -- Contains language items with initilal value.
+ ** data/ 
+  *** url.json -- Folio url
+  *** loan.json -- Some sample loan info for display on ProfileScreen
+  *** resources.json -- Contains subject items with initilal value.
+  *** languages.json -- Contains language items with initilal value.
 
- * image/ -- image folder
+ ** image/ -- image folder
 
- * lib/
-  * LoginButton.js -- LoginButton component
+ ** lib/
+  *** LoginButton.js -- LoginButton component
 
- * LoginScreen.js -- LoginScreen Component
- * HomeScreen.js -- HomeScreen Component contains New Books and News
- * ProfileScreen.js -- ProfileScreen contains user information. 
- * SettingsScreen.js -- Settings page for user perference
- * BookScreen.js -- Book details page
+ ** LoginScreen.js -- LoginScreen Component
+ ** HomeScreen.js -- HomeScreen Component contains New Books and News
+ ** ProfileScreen.js -- ProfileScreen contains user information. 
+ ** SettingsScreen.js -- Settings page for user perference
+ ** BookScreen.js -- Book details page
 
