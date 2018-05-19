@@ -29,18 +29,15 @@ export default class Login extends Component {
 
     constructor(props) {
         super(props);
-        // state contain username and passage
-        this.state = {
-            userName: '',
-            password: ''
-        }
+        this.userName = '';
+        this.password = '';
     }
 
     // when press login, post username and password to folio, then get an unique token
     onPressCallback = () => {
         const data = JSON.stringify({
-            username: this.state.userName,
-            password: this.state.password,
+            username: this.userName,
+            password: this.password,
         });
         const url = hostUrl.url + '/authn/login';
         console.log(url);
@@ -98,9 +95,7 @@ export default class Login extends Component {
                 placeholder="Username"
                 underlineColorAndroid={'transparent'}
                 onChangeText={(text) => {
-                  this.setState({
-                    userName: text
-                  })
+                  this.userName = text;
                 }}
               />
             </View>
@@ -111,9 +106,7 @@ export default class Login extends Component {
                 secureTextEntry
                 underlineColorAndroid={'transparent'}
                 onChangeText={(text) => {
-                  this.setState({
-                    password: text
-                  })
+                  this.password = text;
                 }}
               />
             </View>
