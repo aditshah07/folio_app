@@ -39,7 +39,6 @@
     "eslint-config-stripes": "^1.0.0",
     "eslint-plugin-react-native": "^3.2.1",
     "expo": "^25.0.0",
-    "fs": "0.0.1-security",
     "json-loader": "^0.5.7",
     "path": "^0.12.7",
     "react": "16.2.0",
