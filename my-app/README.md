@@ -5,6 +5,7 @@ In Folio mobile App, we used MVC design pattern, routing the pages is controller
 For our React-Native JavaScript code, we follow ESLint code style.
 
 To emulate the app, enter *npm start* in Terminal.
+
 To test the app, enter *npm test* in Terminal.
 
 The code we writed is listed below:
