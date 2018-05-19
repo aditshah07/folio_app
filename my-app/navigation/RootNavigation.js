@@ -1,13 +1,11 @@
 import { Notifications, AppLoading, Asset, Font } from 'expo';
 import React, { Component } from 'react';
 import { StackNavigator } from 'react-navigation';
-
 import MainTabNavigator from './MainTabNavigator';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
-
 import Login from '../screens/LoginScreen';
 
-
+// This compoment handle Notifications for later development
 export default class RootNavigation extends Component {
   constructor(props) {
     super(props);
@@ -36,6 +34,8 @@ export default class RootNavigation extends Component {
     console.log(`Push notification ${origin} with data: ${JSON.stringify(data)}`);
   };
 
+
+  // go to login screen
   render() {
     return <Login navigation={this.props.navigation} />;
   }

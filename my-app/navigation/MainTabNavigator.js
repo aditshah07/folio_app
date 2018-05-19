@@ -1,17 +1,13 @@
-
 import React from 'react';
 import { StyleSheet,Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
-
 import Colors from '../constants/Colors';
-
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 
-
-
+// TabNavigator shows three Tabs under screens, default Homepage.
 export default TabNavigator(
   {
     Home: {

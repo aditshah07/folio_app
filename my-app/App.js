@@ -8,6 +8,7 @@ import Book from './screens/BookScreen';
 import resources from './screens/data/resources.json';
 import languages from './screens/data/languages.json';
 
+// App.js contains the main navigator, can navigate and pass parameters across screens 
 export default StackNavigator({
   Root: { screen: RootNavigation },
   Login: { screen: Login },
@@ -19,6 +20,7 @@ export default StackNavigator({
   navigationOptions: {
     headerVisible: false,
   },
+  // Some initial parameters
   initialRouteParams: {
     isLoggedIn: false,
     resources: resources,

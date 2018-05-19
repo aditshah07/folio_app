@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {
   ToolbarAndroid,
@@ -11,21 +10,25 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+// LoginButton Compoment 
 export default class LoginButton extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { text: '' };
-  }
-  render() {
-    return (
-      <TouchableOpacity onPress={this.props.onPressCallback} style={LoginStyles.loginTextView}>
-        <Text style={LoginStyles.loginText} >
-          {this.props.name}
-        </Text>
-      </TouchableOpacity>
-    );
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            text: ''
+        };
+    }
+    render() {
+      return (
+        <TouchableOpacity onPress={this.props.onPressCallback} style={LoginStyles.loginTextView}>
+          <Text style={LoginStyles.loginText} >
+            {this.props.name}
+          </Text>
+        </TouchableOpacity>
+      );
+    }
 }
+
 const LoginStyles = StyleSheet.create({
 
   loginText: {

@@ -14,8 +14,6 @@ import { NavigationActions } from 'react-navigation';
 import Toast from 'react-native-easy-toast'
 import resources from './data/resources.json';
 import languages from './data/languages.json';
-//const writeJsonFile = require('write-json-file');
-//import {writeFile} from './lib/RWFileUtil';
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
@@ -31,7 +29,8 @@ export default class SettingsScreen extends React.Component {
   componentDidMount() {
     this.loadData();
   }
-
+  
+  // load initial preference data 
   loadData() {
     this.setState({
       resourceArray: resources,
@@ -39,9 +38,9 @@ export default class SettingsScreen extends React.Component {
     })
   }
 
+  // push all views and checkboxes into an array for rendering 
   renderView() {
-    //const writeJsonFile = require('write-json-file');
-    if (!this.state.resourceArray || this.state.resourceArray.length === 0)return;
+    if (!this.state.resourceArray || this.state.resourceArray.length === 0) return;
     var len = this.state.resourceArray.length;
     var views = [];
     let k = 0;
@@ -133,6 +132,7 @@ export default class SettingsScreen extends React.Component {
 
   }
 
+    // return a checkbox
     renderCheckBox(data) {
       var leftText = data.name;
       return (
@@ -158,7 +158,6 @@ export default class SettingsScreen extends React.Component {
         </View>
       )
     }
-
 }
 
 const styles = StyleSheet.create({

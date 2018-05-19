@@ -17,7 +17,6 @@ import {
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import axios from 'axios';
-
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import HomeScreen from './HomeScreen';
 import RootNavigation from '../navigation/RootNavigation';
@@ -25,30 +24,55 @@ import RootNavigation from '../navigation/RootNavigation';
 
 export default class Login extends Component {
   
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoadingComplete: false,
-      title: "",
-      publisher: "",
-      publishdate: "",
-      publishlocation: "",
-      contributor:"",
-      notes: "",
-      description: "",
-      isbncode: "",
-      language: "",
-      subject: "",
-      source: "",
-      series: ""
-    };
-  }
-
-  componentDidMount = () => {
-    const { params } = this.props.navigation.state;
-    console.log(params);
-    this.findbookinfo(params.book);
-  }
+    constructor(props) {
+        super(props);
+        // Creating state to update the state when we get the values and can update the screen accordingly
+        this.state = {
+            isLoadingComplete: false,
+            title: "",
+            publisher: "",
+            publishdate: "",
+            publishlocation: "",
+            contributor: "",
+            notes: "",
+            description: "",
+            isbncode: "",
+            language: "",
+            subject: "",
+            source: "",
+            series: ""
+        };
+    }
+    
+    // This method calls when the component is ready so we make API calls to findbookinfo
+    componentDidMount = () => {
+        const {
+            params
+        } = this.props.navigation.state;
+        console.log(params);
+        this.findbookinfo(params.book);
+    }
+    
+    // Method update the state according the book parameter passed from homescreen
+    findbookinfo(book) {
+        this.setState(
+            (prev) => ({
+                title: book.title,
+                publisher: book.publication.length === 0 ? '' : book.publication[0].publisher,
+                publishdate: book.publication.length === 0 ? '' : book.publication[0].dateOfPublication,
+                publishlocation: book.publication.length === 0 ? '' : book.publication[0].place,
+                contributor: book.contributors.length === 0 ? '' : book.contributors[0].name,
+                notes: book.notes.length === 0 ? 'Currently Unavailable' : book.notes,
+                description: book.physicalDescriptions.length === 0 ? 'Currently Unavailable' : book.physicalDescriptions,
+                isbncode: book.identifiers[0].value,
+                language: book.language,
+                subject: book.subjects,
+                source: book.source,
+                series: book.series,
+                isLoadingComplete: true,
+            })
+        );
+    }
 
   render() {
     const { params } = this.props.navigation.state;
@@ -122,25 +146,7 @@ export default class Login extends Component {
     )
   }
 
-  findbookinfo(book){
-    this.setState(
-      (prev) => ({
-        title: book.title,
-        publisher: book.publication.length === 0 ? '' : book.publication[0].publisher,
-        publishdate: book.publication.length === 0 ? '' : book.publication[0].dateOfPublication,
-        publishlocation: book.publication.length === 0 ? '' : book.publication[0].place,
-        contributor: book.contributors.length === 0 ? '' : book.contributors[0].name,
-        notes: book.notes.length === 0 ? 'Currently Unavailable' : book.notes,
-        description: book.physicalDescriptions.length === 0 ? 'Currently Unavailable' : book.physicalDescriptions,
-        isbncode: book.identifiers[0].value,
-        language: book.language,
-        subject: book.subjects,
-        source: book.source,
-        series: book.series,
-        isLoadingComplete: true,
-      })
-    );
-  }
+  
 
 }
 

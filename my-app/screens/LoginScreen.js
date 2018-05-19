@@ -26,57 +26,59 @@ import hostUrl from './data/url.json'
 
 
 export default class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.userName = '';
-    this.password = '';
-    this.state = {
-      userName : '',
-      password : ''
+
+    constructor(props) {
+        super(props);
+        // state contain username and passage
+        this.state = {
+            userName: '',
+            password: ''
+        }
     }
-  }
 
-  onPressCallback = () => {
-    
-    const data = JSON.stringify({
-      username: this.userName,
-      password: this.password,
-    });
-    const url = hostUrl.url+'/authn/login';
-    console.log(url);
-
-    axios.post(url, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Okapi-Tenant': 'diku',
-      },
-    })
-      .then((response) => {
-        const tokenName = 'x-okapi-token';
-        const okapi_token = response.headers[tokenName];
-
-        const { navigate } = this.props.navigation;
-        navigate('MainTab', { 
-          isLoggedIn: true,
-          token: okapi_token, 
-          username: this.userName,
-          resources: resources, 
-          languages: languages,
+    // when press login, post username and password to folio, then get an unique token
+    onPressCallback = () => {
+        const data = JSON.stringify({
+            username: this.state.userName,
+            password: this.state.password,
         });
-      })
-      .catch((error) => {
-        Alert.alert(`${error}`);
-      });
-  };
+        const url = hostUrl.url + '/authn/login';
+        console.log(url);
+        // post username and password
+        axios.post(url, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Okapi-Tenant': 'diku',
+                },
+            })
+            // get a token then navigate to the TabNavigater with params
+            .then((response) => {
+                const tokenName = 'x-okapi-token';
+                const okapi_token = response.headers[tokenName];
+                const {
+                    navigate
+                } = this.props.navigation;
+                navigate('MainTab', {
+                    isLoggedIn: true,
+                    token: okapi_token,
+                    username: this.userName,
+                    resources: resources,
+                    languages: languages,
+                });
+            })
+            .catch((error) => {
+                Alert.alert(`${error}`);
+            });
+    };
 
-  _handleforgetpassword = () => {
-    Alert.alert('Please contact the library staff to help you reset password.');
-  }
+    // if press forget password, show a message
+    _handleforgetpassword = () => {
+        Alert.alert('Please contact the library staff to help you reset password.');
+    }
 
 
   render() {
     return (
-
       <KeyboardAwareScrollView style={LoginStyles.loginview}>
         <View style={{ flexDirection: 'row',
           height: 150,
@@ -84,41 +86,42 @@ export default class Login extends Component {
           justifyContent: 'center',
           alignItems: 'flex-start' }}
         >
-          <Image
-            style={{ maxHeight: 210, maxWidth: 210 }}
-            source={require('./image/login.png')}
-          />
+        <Image
+          style={{ maxHeight: 210, maxWidth: 210 }}
+          source={require('./image/login.png')}
+        />
         </View>
-        <View style={{ marginTop: 80 }}>
-
+          <View style={{ marginTop: 80 }}>
             <View style={LoginStyles.TextInputView}>
-            <TextInput
+              <TextInput
                 style={LoginStyles.TextInput}
                 placeholder="Username"
                 underlineColorAndroid={'transparent'}
                 onChangeText={(text) => {
-                this.userName = text;
-              }}
+                  this.setState({
+                    userName: text
+                  })
+                }}
               />
-          </View>
-              <View style={LoginStyles.TextInputView}>
-                <TextInput
-                  style={LoginStyles.TextInput}
-                  placeholder="Password"
-                  secureTextEntry
-                  underlineColorAndroid={'transparent'}
-                  onChangeText={(text) => {
-                    this.password = text;
-                  }}
-                 />
-              </View>
-
-
+            </View>
+            <View style={LoginStyles.TextInputView}>
+              <TextInput
+                style={LoginStyles.TextInput}
+                placeholder="Password"
+                secureTextEntry
+                underlineColorAndroid={'transparent'}
+                onChangeText={(text) => {
+                  this.setState({
+                    password: text
+                  })
+                }}
+              />
+            </View>
           <LoginButton name="Log in" onPressCallback={this.onPressCallback} />
           <TouchableOpacity onPress={this._handleforgetpassword} >
-              <Text style={{ color: '#4A90E2', textAlign: 'right', marginTop: 10 }} >Forget password？</Text>
-            </TouchableOpacity>
-          </View>
+            <Text style={{ color: '#4A90E2', textAlign: 'right', marginTop: 10 }} >Forget password？</Text>
+          </TouchableOpacity>
+        </View>
       </KeyboardAwareScrollView>
     );
   }
