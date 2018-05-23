@@ -1,5 +1,19 @@
 ## Library patron empowerment in the FOLIO project
 
+To Run the Application on Mac:
+1. You need node(npm) installed.
+2. Run (npm install) in the my-app directory. It will install all the dependencies of the project.
+3. Run command (npm start) it will host the server then it will ask for option to run on ios or android. 
+4. You end a emulator on the system to run the application.
+5. For ios you can get xcode and android you can get android studio.
+6. Once the emulator is running then it will install the packages on the emulator.
+7. Then it will direct you to login page.
+8. To login in the system use username: diku_admin and password: admin
+
+To Run the test:
+1. Run command (npm test) in the my-app directory.
+2. To run only the test file run command (npm test App.test.js) in the my-app directory.
+
 In Folio mobile App, we used MVC design pattern, routing the pages is controller, screens are the views and Folio is the Model. 
 
 For our React-Native JavaScript code, we follow ESLint code style.
