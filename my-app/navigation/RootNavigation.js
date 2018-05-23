@@ -8,32 +8,11 @@ import registerForPushNotificationsAsync from '../api/registerForPushNotificatio
 import Login from '../screens/LoginScreen';
 
 
-const RootStackNavigator = StackNavigator(
-  {
-    Main: {
-      screen: MainTabNavigator,
-      
-    },
-  },
-  {
-    navigationOptions: ({navigation}) => ({
-      //params: navigation.state.params,
-      headerTitleStyle: {
-        fontWeight: 'normal',
-      },
-    }),
-  },
-
-);
-
-
 export default class RootNavigation extends Component {
-
   constructor(props) {
     super(props);
-
   }
-  
+
   componentDidMount() {
     this._notificationSubscription = this._registerForPushNotifications();
   }
@@ -41,22 +20,6 @@ export default class RootNavigation extends Component {
   componentWillUnmount() {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
-
-  render() {
-
-    const { params } = this.props.navigation.state;
-    console.log(params.token);
-
-    if (params.isLoggedIn) {
-
-      return <RootStackNavigator screenProps={{prevNav:this.props.navigation}}/>;
-    }
-    else {
-      return <Login navigation={this.props.navigation}/>;
-    } 
-
-  }
-
 
   _registerForPushNotifications() {
     // Send our push token over to our backend so we can receive notifications
@@ -72,6 +35,8 @@ export default class RootNavigation extends Component {
   _handleNotification = ({ origin, data }) => {
     console.log(`Push notification ${origin} with data: ${JSON.stringify(data)}`);
   };
-  
 
+  render() {
+    return <Login navigation={this.props.navigation} />;
+  }
 }

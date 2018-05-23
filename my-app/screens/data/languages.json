@@ -1,0 +1,32 @@
+[ 
+  {
+    "path": "English",
+    "name": "English",
+    "checked": true
+  },
+  {
+    "path": "Spanish",
+    "name": "Spanish",
+    "checked": false
+  },
+  {
+    "path": "French",
+    "name": "French",
+    "checked": false
+  },
+  {
+    "path": "German",
+    "name": "German",
+    "checked": false
+  },
+  {
+    "path": "Mandarin",
+    "name": "Mandarin",
+    "checked": false
+  },
+  {
+    "path": "Russian",
+    "name": "Russian",
+    "checked": false
+  }
+]
