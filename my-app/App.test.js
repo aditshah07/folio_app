@@ -1,20 +1,24 @@
 import React from 'react';
-import App from './App';
 import renderer from 'react-test-renderer';
+import ReactDOM from 'react-dom';
+import axios from 'axios';
+
+import App from './App';
 import Login from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import ProfileScreen from './screens/ProfileScreen';
 
-it('renders App without crashing', () => {
-  const rendered = renderer.create(<App />).toJSON();
+import hostUrl from './screens/data/url.json';
+import resources from './screens/data/resources.json';
 
-  expect(rendered).toBeTruthy();
+it('renders App without crashing', () => {
+	const rendered = renderer.create(<App />).toJSON();
+	expect(rendered).toBeTruthy();
 });
 
 it('renders Login without crashing', () => {
-  const rendered = renderer.create(<Login />).toJSON();
-
-  expect(rendered).toBeTruthy();
+	const rendered = renderer.create(<Login />).toJSON();
+	expect(rendered).toBeTruthy();
 });
 
 it('check initially isLoggedIn is false', () => {
@@ -32,6 +36,7 @@ it('check initially token is empty', () => {
 });
 
 it('check isLoggedIn is true', async() => {
+	jest.useFakeTimers();
 	const component = renderer.create(
 		<App />
 	);
@@ -94,4 +99,49 @@ it('Invalid password should not login', async() => {
 
 	expect(component.getInstance().state.nav.routes[0].params.isLoggedIn).toBe(false)
 
+});
+
+it('Renders profile page after loading user information', async() => {
+	jest.useFakeTimers();
+	var rendered = "";
+    const data = JSON.stringify({
+        username: "diku_admin",
+        password: "admin",
+    });
+    const url = hostUrl.url + '/authn/login';
+    await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Okapi-Tenant': 'diku',
+            },
+        })
+        .then((response) => {
+            var navigation = {state:{params:{token:"", username:""}}};
+            navigation.state.params.token = response.headers['x-okapi-token'];
+            navigation.state.params.username = "diku_admin";
+            rendered = renderer.create(<ProfileScreen navigation = {navigation}/>).toJSON();
+            expect(rendered).toBeTruthy();
+        })
+});
+
+it('Renders HomePage after log in', async() => {
+	jest.useFakeTimers();
+	var rendered = "";
+    const data = JSON.stringify({
+        username: "diku_admin",
+        password: "admin",
+    });
+    const url = hostUrl.url + '/authn/login';
+    await axios.post(url, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Okapi-Tenant': 'diku',
+            },
+        })
+        .then((response) => {
+            var navigation = {state:{params:{resources:resources, token: ""}}};
+            navigation.state.params.token = response.headers['x-okapi-token'];
+            rendered = renderer.create(<HomeScreen navigation = {navigation}/>).toJSON();
+            expect(rendered).toBeTruthy();
+        })
 });
